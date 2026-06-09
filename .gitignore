@@ -1,0 +1,9 @@
+.env
+node_modules/
+.npm-cache/
+dist/
+build/
+.DS_Store
+storage/covers/*
+!storage/covers/.gitkeep
+apps/api/generated/

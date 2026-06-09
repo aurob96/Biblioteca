@@ -1,6 +1,6 @@
 # Biblioteca personal PWA
 
-Aplicacion personal para administrar libros fisicos, estanterias y prestamos. Esta primera version incluye API REST, base PostgreSQL, frontend en español y ejecucion local con Docker Compose.
+Aplicacion personal para administrar libros fisicos, estanterias y prestamos. Version 2.0.0 incluye API REST, base PostgreSQL, frontend en español, mapa visual de estanterias y asistente de reorganizacion.
 
 ## Como correrla
 
@@ -39,6 +39,14 @@ docker compose up
 - Busqueda automatica de metadatos por ISBN en Open Library y Google Books como respaldo.
 - Busqueda de libros sin ISBN por titulo y autor.
 - Asistente de clasificacion con Dewey, LC y etiquetas libres usando Anthropic.
+- Mapa visual interactivo de la casa con estanterias SVG clicables y arrastrables.
+- Panel lateral del mapa con libros agrupados por repisa.
+- Resaltado automatico de la estanteria de un libro desde el catalogo.
+- Edicion de estanterias desde el mapa: agregar, renombrar, mover, redimensionar, definir capacidad o eliminar.
+- Vista movil simplificada con lista de estanterias y barra de ocupacion.
+- Asistente de reorganizacion que analiza dispersion por genero, autor y libros sin ubicacion.
+- Informe de sugerencias con Claude cuando `ANTHROPIC_API_KEY` esta configurada y respaldo local cuando no lo esta.
+- Plan de movimiento imprimible/guardable y confirmacion paso a paso para actualizar ubicaciones.
 - Edicion y eliminacion de libros ya creados.
 - Deteccion de duplicados por ISBN o titulo/autor aproximado.
 - Gestion de generos y subgeneros con color e icono para organizar la coleccion.
@@ -48,6 +56,7 @@ docker compose up
 - Advertencia suave cuando un libro se ubica en una repisa de otro genero.
 - Edicion y eliminacion de estanterias y repisas desde menu.
 - Generacion de tejuelos con vista previa, impresion a PDF y exportacion PNG.
+- Numero de tejuelo visible en las tarjetas de libros.
 - Busqueda por titulo, autor, ISBN, editorial, genero o año.
 - Busqueda unificada no sensible a mayusculas ni tildes.
 - Filtros desplegables por genero, subgenero y estanteria.
@@ -59,7 +68,7 @@ docker compose up
 
 ## Uso inicial
 
-Al abrir la web veras directamente el catalogo. El boton `Herramientas` de la barra superior tiene solo dos opciones: `Crear nuevo libro` y `Gestion de estanterias`. Para empezar:
+Al abrir la web veras directamente el catalogo. El boton `Herramientas` de la barra superior permite crear libros, gestionar estanterias, abrir el mapa de la casa y activar el asistente de reorganizacion. Para empezar:
 
 1. Crea una estanteria, por ejemplo `Estanteria sala`.
 2. Si quieres organizar por genero, crea primero generos como `Historia`, `Filosofia` o `Novela`.
@@ -68,6 +77,7 @@ Al abrir la web veras directamente el catalogo. El boton `Herramientas` de la ba
 5. En el primer paso puedes escanear ISBN, buscar por ISBN, buscar sin ISBN por titulo/autor/editorial/año, o agregar manualmente.
 6. Usa el boton `Prestar` en una tarjeta para registrar un prestamo.
 7. Usa `Devolver` para marcarlo como devuelto.
+8. Usa `Mapa` en una tarjeta para abrir el plano y resaltar la estanteria donde esta ubicado ese libro.
 
 Para usar la camara en movil, abre la app desde un contexto seguro. `localhost` funciona en el mismo dispositivo; para probar desde otro telefono en la red local normalmente necesitaras HTTPS.
 
@@ -89,6 +99,18 @@ docker compose up
 ```
 
 La clasificacion aparece como el tercer paso del flujo de crear o editar libro. Tambien puedes abrirla desde el menu de opciones de una tarjeta de libro existente. La sugerencia siempre queda editable antes de guardarse.
+
+## Mapa de la casa
+
+Desde `Herramientas` > `Mapa de la casa` puedes organizar visualmente las estanterias. En escritorio veras un plano SVG simplificado de la casa; arrastra cada bloque para ajustar su posicion real. Al seleccionar una estanteria, el panel lateral muestra sus libros organizados por repisa. En movil la app muestra una lista compacta de estanterias con barra de ocupacion.
+
+Cada estanteria guarda coordenadas, tamaño visual y capacidad. La capacidad alimenta el indicador de ocupacion y ayuda a detectar estanterias saturadas.
+
+## Asistente de reorganizacion
+
+Desde `Herramientas` > `Asistente de reorganizacion` la app analiza la distribucion actual. Si hay clave de Anthropic configurada, Claude genera el informe en lenguaje natural; si no, la API usa reglas locales para detectar libros sin ubicacion, generos dispersos y autores repartidos.
+
+Cada sugerencia puede aceptarse o descartarse. Al aceptar una sugerencia se crea un plan de movimiento con libro, origen y destino. Puedes imprimirlo o guardarlo como PDF desde el navegador, y confirmar cada movimiento fisico para que la base de datos actualice la ubicacion del libro.
 
 ## Tejuelos
 
